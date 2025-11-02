@@ -1,0 +1,6 @@
+CREATE TABLE Account (
+    accId INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(100),
+    balance DOUBLE
+);
+INSERT INTO Account (name, balance) VALUES ('John', 1000), ('Alice', 2000);
