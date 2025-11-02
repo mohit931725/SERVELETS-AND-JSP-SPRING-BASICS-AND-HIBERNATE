@@ -1,0 +1,38 @@
+import java.io.*;
+import javax.servlet.*;
+import javax.servlet.http.*;
+import java.sql.*;
+
+public class EmployeeServlet extends HttpServlet {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.setContentType("text/html");
+        PrintWriter out = response.getWriter();
+        String empid = request.getParameter("empid");
+        String viewAll = request.getParameter("viewAll");
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/testdb","root","password");
+            Statement st = con.createStatement();
+            ResultSet rs;
+            if(viewAll != null){
+                rs = st.executeQuery("SELECT * FROM Employee");
+                out.println("<h2>All Employee Records</h2><table border='1'><tr><th>EmpID</th><th>Name</th><th>Salary</th></tr>");
+                while(rs.next()){
+                    out.println("<tr><td>"+rs.getInt(1)+"</td><td>"+rs.getString(2)+"</td><td>"+rs.getDouble(3)+"</td></tr>");
+                }
+                out.println("</table>");
+            } else if(empid != null && !empid.isEmpty()){
+                PreparedStatement ps = con.prepareStatement("SELECT * FROM Employee WHERE EmpID=?");
+                ps.setInt(1, Integer.parseInt(empid));
+                rs = ps.executeQuery();
+                if(rs.next()){
+                    out.println("<h2>Employee Details</h2>");
+                    out.println("ID: "+rs.getInt(1)+"<br>Name: "+rs.getString(2)+"<br>Salary: "+rs.getDouble(3));
+                } else {
+                    out.println("<h3>No employee found with ID "+empid+"</h3>");
+                }
+            }
+            con.close();
+        } catch(Exception e){ out.println(e); }
+    }
+}
