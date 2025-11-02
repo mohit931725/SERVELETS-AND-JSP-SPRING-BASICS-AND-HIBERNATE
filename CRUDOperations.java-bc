@@ -1,0 +1,42 @@
+package com.nimbus.hibernatecrud;
+
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+import java.util.List;
+
+public class CRUDOperations {
+    public void createStudent(String name, int age) {
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        Transaction tx = session.beginTransaction();
+        Student s = new Student(name, age);
+        session.save(s);
+        tx.commit();
+        session.close();
+    }
+
+    public List<Student> readStudents() {
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        List<Student> list = session.createQuery("from Student", Student.class).list();
+        session.close();
+        return list;
+    }
+
+    public void updateStudent(int id, String newName) {
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        Transaction tx = session.beginTransaction();
+        Student s = session.get(Student.class, id);
+        s.setName(newName);
+        session.update(s);
+        tx.commit();
+        session.close();
+    }
+
+    public void deleteStudent(int id) {
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        Transaction tx = session.beginTransaction();
+        Student s = session.get(Student.class, id);
+        session.delete(s);
+        tx.commit();
+        session.close();
+    }
+}
