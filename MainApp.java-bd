@@ -1,0 +1,21 @@
+package com.nimbus.hibernatecrud;
+
+import java.util.List;
+
+public class MainApp {
+    public static void main(String[] args) {
+        CRUDOperations crud = new CRUDOperations();
+        crud.createStudent("Alice", 22);
+        crud.createStudent("Bob", 23);
+
+        System.out.println("Students after insertion:");
+        List<Student> list = crud.readStudents();
+        list.forEach(s -> System.out.println(s.getId() + " " + s.getName() + " " + s.getAge()));
+
+        crud.updateStudent(1, "Alice Updated");
+        crud.deleteStudent(2);
+
+        System.out.println("Final Students:");
+        crud.readStudents().forEach(s -> System.out.println(s.getId() + " " + s.getName() + " " + s.getAge()));
+    }
+}
